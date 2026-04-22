@@ -135,6 +135,20 @@ Public Class MMQRCodeGenerator
 			' Handle the exception (e.g., log it)
 		End Try
 	End Sub
+	Private Sub SaveQRCodeImageTest(image As Bitmap)
+		Try
+			If image IsNot Nothing Then
+
+				' Save the image
+				'Dim fullPath = IO.Path.Combine(directory, filePath)
+				'image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png)
+			Else
+				Throw New ArgumentNullException(NameOf(image), "Image cannot be null.")
+			End If
+		Catch ex As Exception
+			' Handle the exception (e.g., log it)
+		End Try
+	End Sub
 
 	Private Sub btnUploadLogo_Click(sender As Object, e As EventArgs) Handles btnUploadLogo.Click
 		If OpenFileDialog1.ShowDialog = DialogResult.OK Then
