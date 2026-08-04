@@ -18,7 +18,7 @@ Public Class MMQRCodeGenerator
 		If ColorDialog2.Color <> Color.White AndAlso ColorDialog2.Color <> Color.Black Then
 			qrColor2 = ColorDialog2.Color
 		End If
-
+		'Comment
 		Dim qrWidth = Integer.Parse(txtHeight.Text)
 		Dim qrHeight = Integer.Parse(txtHeight.Text)
 
