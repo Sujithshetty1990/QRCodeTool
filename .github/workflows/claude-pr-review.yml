@@ -1,0 +1,106 @@
+name: Claude PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR details
+        id: pr_details
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            console.log('PR Number:', pr.number);
+            console.log('PR Title:', pr.title);
+            console.log('PR Body:', pr.body);
+            
+            // Get changed files
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+            });
+            
+            console.log('Changed Files:', files);
+            core.setOutput('pr_number', pr.number);
+            core.setOutput('pr_title', pr.title);
+            core.setOutput('pr_body', pr.body);
+            core.setOutput('files', JSON.stringify(files));
+
+      - name: Call Claude API for review
+        id: claude_review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PR_NUMBER: ${{ steps.pr_details.outputs.pr_number }}
+          PR_TITLE: ${{ steps.pr_details.outputs.pr_title }}
+          PR_BODY: ${{ steps.pr_details.outputs.pr_body }}
+          PR_FILES: ${{ steps.pr_details.outputs.files }}
+        run: |
+          python3 << 'PYTHON_EOF'
+          import os
+          import json
+          import subprocess
+          
+          # Install anthropic package
+          subprocess.run(['pip', 'install', 'anthropic', '-q'], check=True)
+          
+          from anthropic import Anthropic
+          
+          client = Anthropic()
+          
+          pr_number = os.getenv('PR_NUMBER')
+          pr_title = os.getenv('PR_TITLE')
+          pr_body = os.getenv('PR_BODY')
+          pr_files = json.loads(os.getenv('PR_FILES'))
+          
+          # Prepare file details
+          files_info = "Changed Files:\n"
+          for file in pr_files[:10]:
+              files_info += "- " + file['filename'] + " (+" + str(file.get('additions', 0)) + "/-" + str(file.get('deletions', 0)) + ")\n"
+          
+          prompt = "Please review this GitHub Pull Request and provide a concise code review:\n\nPR Title: " + pr_title + "\nPR Description: " + pr_body + "\n\n" + files_info + "\nProvide a brief review covering:\n1. Summary of changes\n2. Any concerns or issues\n3. Suggestions for improvement\n4. Approval status (Approve/Request Changes/Comment)\n\nKeep the review concise and actionable."
+          
+          message = client.messages.create(
+              model="claude-3-5-sonnet-20241022",
+              max_tokens=1024,
+              messages=[
+                  {"role": "user", "content": prompt}
+              ]
+          )
+          
+          review_text = message.content[0].text
+          
+          # Write review to file for next step
+          with open('/tmp/claude_review.txt', 'w') as f:
+              f.write(review_text)
+          
+          print("Claude Review Generated:")
+          print(review_text)
+          PYTHON_EOF
+
+      - name: Post review as PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('/tmp/claude_review.txt', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## 🤖 Claude AI Review\n\n' + review
+            });
