@@ -115,7 +115,7 @@ Public Class MMQRCodeGenerator
 		End Using
 
 
-
+			'Test comment
 		' Add top and bottom text
 		Dim finalImage As Bitmap = AddTextToImage(gradientQRCode, topText, bottomText, 100, 100)
 		SaveQRCodeImage(finalImage)
