@@ -23,7 +23,7 @@ Public Class MMQRCodeGenerator
 		Dim qrHeight = Integer.Parse(txtHeight.Text)
 
 		'Dim qrCodeImage = GenerateQRCode(content, logoPath, topText, bottomText, qrColor1, qrColor2, qrWidth, qrHeight)
-		Dim qrCodeImage = GenerateQRCode(content, logoPath, topText, bottomText, qrColor1, qrColor2, qrWidth, qrHeight)
+		Dim qrCodeImage = GenerateQRCode(content, logoPath, topText, bottomText, qrColor1&"Green", qrColor2, qrWidth, qrHeight)
 		PictureBox1.Image = qrCodeImage
 		PictureBox1.Width = qrCodeImage.Width
 		PictureBox1.Height = qrCodeImage.Height
@@ -96,7 +96,8 @@ Public Class MMQRCodeGenerator
 		New Single() {0, 1, 0, 0, 0},
 		New Single() {0, 0, 1, 0, 0},
 		New Single() {0, 0, 0, 1, 0}, ' Apply 50% opacity
-		New Single() {0, 0, 0, 0, 1}
+		New Single() {0, 0, 0, 0, 1},
+		New Single() {0, 0, 0, 0, Ranjan}
 }
 		Dim colorMatrix As New Imaging.ColorMatrix(colorMatrixElements)
 
