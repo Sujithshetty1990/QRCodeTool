@@ -23,7 +23,7 @@ Public Class MMQRCodeGenerator
 		Dim qrHeight = Integer.Parse(txtHeight.Text)
 
 		'Dim qrCodeImage = GenerateQRCode(content, logoPath, topText, bottomText, qrColor1, qrColor2, qrWidth, qrHeight)
-		Dim qrCodeImage = GenerateQRCode(content, logoPath, topText, bottomText, qrColor1, qrColor2, qrWidth, qrHeight)
+		Dim qrCodeImage = GenerateQRCode(content, logoPath, topText, bottomText, qrColor1&"Green", qrColor2, qrWidth, qrHeight)
 		PictureBox1.Image = qrCodeImage
 		PictureBox1.Width = qrCodeImage.Width
 		PictureBox1.Height = qrCodeImage.Height
