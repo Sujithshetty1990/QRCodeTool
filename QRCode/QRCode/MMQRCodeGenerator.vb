@@ -14,7 +14,7 @@ Public Class MMQRCodeGenerator
 		Dim qrColor1 = ColorDialog1.Color
 		Dim textColor = ColorDialog3.Color
 		Dim qrColor2 = Color.White
-
+		Dim qrColor3 = Color.Green
 		If ColorDialog2.Color <> Color.White AndAlso ColorDialog2.Color <> Color.Black Then
 			qrColor2 = ColorDialog2.Color
 		End If
