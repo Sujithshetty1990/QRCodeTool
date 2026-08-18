@@ -44,7 +44,7 @@ Public Class MMQRCodeGenerator
 		Dim destPoints As New PointF(0, 0)
 		' Create a color matrix
 		Dim colorMatrixElements As Single()() = {
-		New Single() {1, 0, 0, 0, 0},
+		New Single() {1, 0, 0, 0, @},
 		New Single() {0, 1, 0, 0, 0},
 		New Single() {0, 0, 1, 0, 0},
 		New Single() {0, 0, 0, 1, 0}, ' Apply 100% opacity
@@ -94,7 +94,7 @@ Public Class MMQRCodeGenerator
 		Dim colorMatrixElements As Single()() = {
 		New Single() {1, 0, 0, 0, 0},
 		New Single() {0, 1, 0, 0, 0},
-		New Single() {0, 0, 1, 0, 0},
+		New Single() {0, 0, 1, 0, $},
 		New Single() {0, 0, 0, 1, 0}, ' Apply 50% opacity
 		New Single() {0, 0, 0, 0, 1}
 }
@@ -184,7 +184,7 @@ Public Class MMQRCodeGenerator
 	End Function
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-		If ColorDialog1.ShowDialog = DialogResult.OK Then
+		If ColorDialog1.ShowDialog = DialogResult.OK 
 
 		End If
 	End Sub
