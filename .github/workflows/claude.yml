@@ -4,11 +4,15 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+concurrency:
+  group: claude-code-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   review:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
       contents: read
       pull-requests: write
@@ -25,23 +29,39 @@ jobs:
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
           prompt: |
-            Before reviewing, reconcile prior feedback on this PR:
-            1. Run `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments --paginate`
-               to list existing review comments.
-            2. For every comment you (Claude) previously posted that is still open, check whether the
-               commits since that comment fixed the issue it describes (compare against
-               `gh pr diff ${{ github.event.pull_request.number }}`).
-            3. For each one that is now fixed, reply on that exact thread - do NOT open a new top-level
-               comment and do NOT resolve/close the conversation, just reply:
-               `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments/<comment_id>/replies -f body="Resolved as of ${{ github.event.pull_request.head.sha }} - looks fixed on re-review."`
-               Leave threads that are still unfixed alone - do not reply, do not duplicate a new comment
-               for the same issue.
+            Repo: ${{ github.repository }}
+            PR: #${{ github.event.pull_request.number }}
+            Head SHA: ${{ github.event.pull_request.head.sha }}
 
-            Then run the code review skill:
-            /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment
+            Step 1 - Reconcile prior feedback (skip quietly if there are none):
+            - Run `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments --paginate`
+              and find comments you previously posted (identified by the
+              `<!-- claude-code-review -->` marker you always include, see Step 3).
+            - For each one whose issue is now fixed by commits since it was posted
+              (check against `gh pr diff ${{ github.event.pull_request.number }}`), reply on
+              that exact thread only - do not open a new comment, do not resolve/close it:
+              `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments/<comment_id>/replies -f body="<!-- claude-code-review --> Resolved as of ${{ github.event.pull_request.head.sha }} - looks fixed on re-review."`
+            - Leave still-open, unfixed threads untouched. Never duplicate a comment for an
+              issue you already flagged and that is still unfixed.
 
-            IMPORTANT override: ignore the code-review skill's Step 1 rule "stop if Claude has already
-            commented on this PR" - always perform the full review on every run, scoped to what changed
-            since the last reviewed commit, so the PR converges to zero open Claude comments as fixes land.
+            Step 2 - Full review, no exceptions:
+            Run `/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment`.
+            Override the skill's own Step 1 gate entirely for this run - do NOT skip the
+            review for being "trivial", "obviously correct", "already commented on", or any
+            similar judgment call. Always perform the full analysis on the diff for this
+            head SHA. When you do post an inline comment, prefix its body with the literal
+            marker `<!-- claude-code-review -->` on its own line so future runs (Step 1) and
+            you (right now, Step 3) can identify it.
+
+            Step 3 - Guaranteed visible output (mandatory, no exceptions):
+            After Step 2 finishes, confirm something was actually posted for this run (a new
+            inline comment, or a "no issues found" summary comment). If nothing was posted -
+            for ANY reason, including your own decision that no review was needed - you must
+            still run:
+              `gh pr comment ${{ github.event.pull_request.number }} --body "<!-- claude-code-review --> Reviewed <N> changed file(s) at ${{ github.event.pull_request.head.sha }}. No high-signal issues found."`
+            A run that produces zero visible trace on the PR is a failure of this task. Also
+            write a one-paragraph summary of what you reviewed and decided to
+            `$GITHUB_STEP_SUMMARY` so it's visible on the workflow run page without digging
+            through logs.
           claude_args: |
-            --max-turns 40
+            --max-turns 60
