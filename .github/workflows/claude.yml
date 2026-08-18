@@ -12,8 +12,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      issues: read
-      id-token: write
+
     steps:
       - uses: actions/checkout@v6
         with:
@@ -24,6 +23,21 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
-          prompt: "/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment"
+          prompt: |
+
+               commits since that comment fixed the issue it describes (compare against
+               `gh pr diff ${{ github.event.pull_request.number }}`).
+            3. For each one that is now fixed, reply on that exact thread — do NOT open a new top-level
+               comment and do NOT resolve/close the conversation, just reply:
+               `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments/<comment_id>/replies -f body="Resolved as of ${{ github.event.pull_request.head.sha }} — looks fixed on re-review."`
+               Leave threads that are still unfixed alone — do not reply, do not duplicate a new comment
+               for the same issue.
+
+            Then run the code review skill:
+            /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment
+
+            IMPORTANT override: ignore the code-review skill's Step 1 rule "stop if Claude has already
+            commented on this PR" — always perform the full review on every run, scoped to what changed
+            since the last reviewed commit, so the PR converges to zero open Claude comments as fixes land.
           claude_args: |
-            --max-turns 30
+            --max-turns 40
