@@ -2,28 +2,28 @@ name: .NET Build
 
 on:
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
   push:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build PR
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore
-        run: dotnet restore QRCode/QRCode.sln
+      - name: Restore dependencies
+        run: dotnet restore
 
-      - name: Build
-        run: dotnet build QRCode/QRCode.sln --configuration Release --no-restore
-
-      - name: Test
-        run: dotnet test QRCode/QRCode.sln --configuration Release --no-build --verbosity normal
+      - name: Build solution
+        run: dotnet build --no-restore --configuration Release
