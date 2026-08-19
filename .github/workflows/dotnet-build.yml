@@ -1,0 +1,29 @@
+name: .NET Build
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore QRCode/QRCode.sln
+
+      - name: Build
+        run: dotnet build QRCode/QRCode.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test QRCode/QRCode.sln --configuration Release --no-build --verbosity normal
