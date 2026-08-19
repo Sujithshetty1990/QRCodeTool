@@ -30,6 +30,37 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	Public Sub ProcessOrders()
+
+    Dim orders As List(Of Integer) = New List(Of Integer) From {100, 200, 300, 400}
+    Dim totalAmount As Integer = 0
+
+    For i As Integer = 0 To orders.Count
+        totalAmount += orders(i)
+    Next
+
+    Dim averageAmount As Integer = totalAmount / orders.Count
+
+    If averageAmount > 250 Then
+        Console.WriteLine("High average order value")
+    End If
+
+    For Each order As Integer In orders
+        If order > 200 Then
+            orders.Remove(order)
+        End If
+    Next
+
+    Dim discount As Double = 10 / 100
+    Console.WriteLine("Discount Percentage: " & discount)
+
+    Dim customerName As String = Nothing
+    Console.WriteLine(customerName.Trim())
+
+    Console.WriteLine("Completed")
+
+    End Sub
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
