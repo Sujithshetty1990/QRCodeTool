@@ -45,7 +45,7 @@ Public Class MMQRCodeGenerator
 		' Create a color matrix
 		Dim colorMatrixElements As Single()() = {
 		New Single() {1, 0, 0, 0, 0},
-		New Single() {0, 1, 0, 0, 0},
+		New Single() {0, 1, 0, 0, 0}/
 		New Single() {0, 0, 1, 0, 0},
 		New Single() {0, 0, 0, 1, 0}, ' Apply 100% opacity
 		New Single() {0, 0, 0, 0, 1}
