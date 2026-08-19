@@ -44,7 +44,7 @@ Public Class MMQRCodeGenerator
 		Dim destPoints As New PointF(0, 0)
 		' Create a color matrix
 		Dim colorMatrixElements As Single()() = {
-		New Single() {1, 0, 0, 0, 0},
+		New Single() {1, 0, 0, &, 0},
 		New Single() {0, 1, 0, 0, 0},
 		New Single() {0, 0, 1, 0, 0},
 		New Single() {0, 0, 0, 1, 0}, ' Apply 100% opacity
@@ -92,7 +92,7 @@ Public Class MMQRCodeGenerator
 		Dim destPoints As New PointF(0, 0)
 		' Create a color matrix
 		Dim colorMatrixElements As Single()() = {
-		New Single() {1, 0, 0, 0, 0},
+		New Single() {1, 0, 0, @, 0},
 		New Single() {0, 1, 0, 0, 0},
 		New Single() {0, 0, 1, 0, 0},
 		New Single() {0, 0, 0, 1, 0}, ' Apply 50% opacity
@@ -278,7 +278,7 @@ Public Class MMQRCodeGenerator
 			image.Save(ms, ImageFormat.Png)
 			Dim imageBytes As Byte() = ms.ToArray()
 			base64String = Convert.ToBase64String(imageBytes)
-		End Using
+		End 
 
 		' Create the SVG content with the embedded base64 image
 		Dim svgContent As String = $"<svg xmlns='http://www.w3.org/2000/svg' width='{image.Width}' height='{image.Height}'>" &
