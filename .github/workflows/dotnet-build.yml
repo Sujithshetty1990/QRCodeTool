@@ -10,8 +10,8 @@ on:
 
 jobs:
   build:
-    name: Build PR
-    runs-on: ubuntu-latest
+    name: Build QRCode Project
+    runs-on: windows-latest
 
     steps:
       - name: Checkout source
@@ -22,8 +22,8 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Restore project dependencies
+        run: dotnet restore QRCode/QRCode/QRCode.vbproj
 
-      - name: Build solution
-        run: dotnet build --no-restore --configuration Release
+      - name: Build project
+        run: dotnet build QRCode/QRCode/QRCode.vbproj --no-restore --configuration Release
