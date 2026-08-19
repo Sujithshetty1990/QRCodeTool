@@ -4,15 +4,11 @@ on:
   pull_request:
     types: [opened, synchronize]
 
-concurrency:
-  group: claude-code-review-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
 jobs:
   review:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     permissions:
       contents: read
       pull-requests: write
@@ -24,53 +20,16 @@ jobs:
           fetch-depth: 1
 
       - uses: anthropics/claude-code-action@v1
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
           prompt: |
-            Repo: ${{ github.repository }}
-            PR: #${{ github.event.pull_request.number }}
-            Head SHA: ${{ github.event.pull_request.head.sha }}
+            /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment
 
-            Step 1 - Reconcile prior feedback (skip quietly if there are none):
-            - Run `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments --paginate`
-              and find comments you previously posted (identified by the
-              `<!-- claude-code-review -->` marker you always include, see Step 3).
-            - For each one whose issue is now fixed by commits since it was posted
-              (check against `gh pr diff ${{ github.event.pull_request.number }}`), reply on
-              that exact thread only - do not open a new comment, do not resolve/close it:
-              `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments/<comment_id>/replies -f body="<!-- claude-code-review --> Resolved as of ${{ github.event.pull_request.head.sha }} - looks fixed on re-review."`
-            - Leave still-open, unfixed threads untouched. Never duplicate a comment for an
-              issue you already flagged and that is still unfixed.
-
-            Step 2 - Full review, no exceptions:
-            Run `/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment`.
-            Override the skill's own Step 1 gate entirely for this run - do NOT skip the
-            review for being "trivial", "obviously correct", "already commented on", or any
-            similar judgment call. Always perform the full analysis on the diff for this
-            head SHA. When you do post an inline comment, prefix its body with the literal
-            marker `<!-- claude-code-review -->` on its own line so future runs (Step 1) and
-            you (right now, Step 3) can identify it.
-
-            Step 3 - Guaranteed visible output (mandatory, no exceptions):
-            After Step 2 finishes, confirm something was actually posted for this run (a new
-            inline comment, or a summary comment as described below). Before posting the
-            summary comment, write a short (2-4 sentence) plain-language description of what
-            this PR actually changes, based on `gh pr diff ${{ github.event.pull_request.number }}`
-            and `gh pr view ${{ github.event.pull_request.number }} --json title,body,files`
-            - describe the intent and scope of the change, not a file listing.
-            Always post exactly one top-level summary comment for this run (in addition to
-            any inline comments from Step 2), formatted as:
-              `gh pr comment ${{ github.event.pull_request.number }} --body "<!-- claude-code-review -->
-              **Summary of changes:** <your 2-4 sentence description here>
-
-              **Review result:** Reviewed <N> changed file(s) at ${{ github.event.pull_request.head.sha }}. <Either 'No high-signal issues found.' or 'N issue(s) flagged inline above.'>"`
-            A run that produces zero visible trace on the PR, or that skips the changes
-            summary, is a failure of this task. Also write the same summary to
-            `$GITHUB_STEP_SUMMARY` so it's visible on the workflow run page without digging
-            through logs.
+            After the review completes, also post one top-level PR comment (in addition to
+            any inline findings) with a short 2-4 sentence plain-language summary of what
+            this PR changes, based on the diff, followed by the review outcome (issues found
+            or none).
           claude_args: |
-            --max-turns 60
+            --max-turns 30
