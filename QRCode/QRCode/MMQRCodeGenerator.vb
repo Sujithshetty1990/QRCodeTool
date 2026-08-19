@@ -52,6 +52,50 @@ Public Class MMQRCodeGenerator
 }
 		Dim colorMatrix As New Imaging.ColorMatrix(colorMatrixElements)
 
+		Dim numbers As Integer() = {1, 2, 3, 4, 5}
+8
+ 
+9
+For i As Integer = 0 To numbers.Length
+10
+Console.WriteLine(numbers(i))
+11
+Next
+12
+ 
+13
+Dim total As Integer
+14
+ 
+15
+For Each n As Integer In numbers
+16
+total = total + n
+17
+Next
+18
+ 
+19
+Dim average As Integer = total / numbers.Length
+20
+ 
+21
+If average = 3 Then
+22
+Console.WriteLine("Average is 3")
+23
+ElseIf average > 3
+24
+Console.WriteLine("Average is greater than 3")
+25
+End If
+26
+ 
+27
+Console.WriteLine("Done")
+
+		
+
 		' Create an ImageAttributes object and set the color matrix
 		Dim imageAttributes As New Imaging.ImageAttributes()
 		imageAttributes.SetColorMatrix(colorMatrix, Imaging.ColorMatrixFlag.Default, Imaging.ColorAdjustType.Bitmap)
