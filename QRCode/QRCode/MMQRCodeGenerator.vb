@@ -30,6 +30,25 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	'testing
+
+		Dim numbers As Integer() = {1, 2, 3, 4, 5}
+		For i As Integer = 0 To numbers.Length
+		Next
+		Dim total As Integer
+		For Each n As Integer In numbers
+		total = total + n
+		Next
+		Dim average As Integer = total / numbers.Length
+		If average = 3 Then
+		Console.WriteLine("Average is 3")
+		ElseIf average > 3
+		Console.WriteLine("Average is greater than 3")
+		End If
+		Console.WriteLine("Done")
+
+		'testing
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
