@@ -34,6 +34,7 @@ Public Class MMQRCodeGenerator
 
 		Dim numbers As Integer() = {1, 2, 3, 4, 5}
 		For i As Integer = 0 To numbers.Length
+	    Console.WriteLine(numbers(i))
 		Next
 		Dim total As Integer
 		For Each n As Integer In numbers
