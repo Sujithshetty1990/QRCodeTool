@@ -24,6 +24,8 @@ jobs:
           fetch-depth: 1
 
       - uses: anthropics/claude-code-action@v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
@@ -55,12 +57,19 @@ jobs:
 
             Step 3 - Guaranteed visible output (mandatory, no exceptions):
             After Step 2 finishes, confirm something was actually posted for this run (a new
-            inline comment, or a "no issues found" summary comment). If nothing was posted -
-            for ANY reason, including your own decision that no review was needed - you must
-            still run:
-              `gh pr comment ${{ github.event.pull_request.number }} --body "<!-- claude-code-review --> Reviewed <N> changed file(s) at ${{ github.event.pull_request.head.sha }}. No high-signal issues found."`
-            A run that produces zero visible trace on the PR is a failure of this task. Also
-            write a one-paragraph summary of what you reviewed and decided to
+            inline comment, or a summary comment as described below). Before posting the
+            summary comment, write a short (2-4 sentence) plain-language description of what
+            this PR actually changes, based on `gh pr diff ${{ github.event.pull_request.number }}`
+            and `gh pr view ${{ github.event.pull_request.number }} --json title,body,files`
+            - describe the intent and scope of the change, not a file listing.
+            Always post exactly one top-level summary comment for this run (in addition to
+            any inline comments from Step 2), formatted as:
+              `gh pr comment ${{ github.event.pull_request.number }} --body "<!-- claude-code-review -->
+              **Summary of changes:** <your 2-4 sentence description here>
+
+              **Review result:** Reviewed <N> changed file(s) at ${{ github.event.pull_request.head.sha }}. <Either 'No high-signal issues found.' or 'N issue(s) flagged inline above.'>"`
+            A run that produces zero visible trace on the PR, or that skips the changes
+            summary, is a failure of this task. Also write the same summary to
             `$GITHUB_STEP_SUMMARY` so it's visible on the workflow run page without digging
             through logs.
           claude_args: |
