@@ -32,9 +32,11 @@ Public Class MMQRCodeGenerator
 
 	'testing
 
+		'testing
+
 		Dim numbers As Integer() = {1, 2, 3, 4, 5}
 		For i As Integer = 0 To numbers.Length
-	    Console.WriteLine(numbers(i))
+		Console.WriteLine(numbers(i))Expand commentComment on lines R58 to R59ResolvedExpand commentComment on lines R55 to R59Resolved
 		Next
 		Dim total As Integer
 		For Each n As Integer In numbers
@@ -47,6 +49,8 @@ Public Class MMQRCodeGenerator
 		Console.WriteLine("Average is greater than 3")
 		End If
 		Console.WriteLine("Done")
+
+		'testing
 
 		'testing
 
