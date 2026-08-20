@@ -33,3 +33,4 @@ jobs:
             or none).
           claude_args: |
             --max-turns 30
+            --model claude-sonnet-5
