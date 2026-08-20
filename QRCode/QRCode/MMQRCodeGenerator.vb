@@ -100,6 +100,14 @@ Public Class MMQRCodeGenerator
 }
 		Dim colorMatrix As New Imaging.ColorMatrix(colorMatrixElements)
 
+		Public Function DivideNumbers(ByVal a As Integer, ByVal b As Integer) As Integer
+    	Dim result As Integer = a / b   ' Possible divide-by-zero exception
+    	Return result
+		End Function
+
+		Dim password As String = "Admin@123"  ' Hard-coded credential
+		Console.WriteLine("Logging in with password: " & password)
+
 		' Create an ImageAttributes object and set the color matrix
 		Dim imageAttributes As New Imaging.ImageAttributes()
 		imageAttributes.SetColorMatrix(colorMatrix, Imaging.ColorMatrixFlag.Default, Imaging.ColorAdjustType.Bitmap)
