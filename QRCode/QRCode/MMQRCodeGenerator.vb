@@ -30,6 +30,14 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	Public Function DivideNumbers(ByVal a As Integer, ByVal b As Integer) As Integer
+    	Dim result As Integer = a / b   ' Possible divide-by-zero exception
+    	Return result
+	End Function
+
+	Dim password As String = "Admin@123"  ' Hard-coded credential
+	Console.WriteLine("Logging in with password: " & password)
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
@@ -99,14 +107,6 @@ Public Class MMQRCodeGenerator
 		New Single() {0, 0, 0, 0, 1}
 }
 		Dim colorMatrix As New Imaging.ColorMatrix(colorMatrixElements)
-
-		Public Function DivideNumbers(ByVal a As Integer, ByVal b As Integer) As Integer
-    	Dim result As Integer = a / b   ' Possible divide-by-zero exception
-    	Return result
-		End Function
-
-		Dim password As String = "Admin@123"  ' Hard-coded credential
-		Console.WriteLine("Logging in with password: " & password)
 
 		' Create an ImageAttributes object and set the color matrix
 		Dim imageAttributes As New Imaging.ImageAttributes()
