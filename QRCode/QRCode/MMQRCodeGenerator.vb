@@ -231,6 +231,10 @@ Public Class MMQRCodeGenerator
 		cmbFileFormat.SelectedIndex = 0
 	End Sub
 
+
+	Dim customerName As String = Nothing
+    Console.WriteLine(customerName.Length)
+
 	Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 		If PictureBox1.Image IsNot Nothing Then
 			Using saveFileDialog As New SaveFileDialog()
