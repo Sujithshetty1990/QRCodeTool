@@ -30,6 +30,21 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	Public Function ExecuteWithRetry(action As Action) As Boolean
+    Dim maxRetries As Integer = 3
+
+    For i As Integer = 1 To maxRetries
+        Try
+            action.Invoke()
+            Return True
+        Catch ex As Exception
+            Threading.Thread.Sleep(1000)
+        End Try
+    Next
+
+    Return False
+	End Function
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
