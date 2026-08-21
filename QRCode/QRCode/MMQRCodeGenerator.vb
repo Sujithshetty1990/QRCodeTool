@@ -30,6 +30,8 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	Dim number As Integer = "Hello"
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
@@ -135,6 +137,21 @@ Public Class MMQRCodeGenerator
 			' Handle the exception (e.g., log it)
 		End Try
 	End Sub
+
+
+	Public Function FindDuplicateValues(items As List(Of Integer)) As List(Of Integer)
+    Dim duplicates As New List(Of Integer)
+
+    For i As Integer = 0 To items.Count - 1
+        For j As Integer = i + 1 To items.Count - 1
+            If items(i) = items(j) AndAlso Not duplicates.Contains(items(i)) Then
+                duplicates.Add(items(i))
+            End If
+        Next
+    Next
+
+    Return duplicates
+End Function
 
 	Private Sub btnUploadLogo_Click(sender As Object, e As EventArgs) Handles btnUploadLogo.Click
 		If OpenFileDialog1.ShowDialog = DialogResult.OK Then
