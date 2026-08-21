@@ -30,6 +30,8 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	Dim number As Integer = "Hello"
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
@@ -51,6 +53,8 @@ Public Class MMQRCodeGenerator
 		New Single() {0, 0, 0, 0, 1}
 }
 		Dim colorMatrix As New Imaging.ColorMatrix(colorMatrixElements)
+
+		Dim number As Integer = "Hello"
 
 		' Create an ImageAttributes object and set the color matrix
 		Dim imageAttributes As New Imaging.ImageAttributes()
