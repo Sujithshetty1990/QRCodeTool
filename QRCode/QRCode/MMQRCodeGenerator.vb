@@ -45,6 +45,17 @@ Public Class MMQRCodeGenerator
     Return False
 	End Function
 
+    Imports System.Text.RegularExpressions
+
+	Public Function IsValidEmail(email As String) As Boolean
+    If String.IsNullOrWhiteSpace(email) Then
+        Return False
+    End If
+
+    Dim pattern As String = "^[^@\s]+@[^@\s]+\.[^@\s]+$"
+    Return Regex.IsMatch(email, pattern)
+	End Function
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
