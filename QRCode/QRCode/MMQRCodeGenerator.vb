@@ -82,6 +82,10 @@ Public Class MMQRCodeGenerator
 
 
 	Dim total As Integer = "100"
+
+	Dim items As List(Of String = New List(Of String)()
+
+	Dim items As List(Of String = New List(Of String)()
 	
 	Private Function GenerateQRCode_Latest(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
