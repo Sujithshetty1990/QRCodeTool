@@ -54,6 +54,8 @@ Public Class MMQRCodeGenerator
 }
 		Dim colorMatrix As New Imaging.ColorMatrix(colorMatrixElements)
 
+		Dim number As Integer = "Hello"
+
 		' Create an ImageAttributes object and set the color matrix
 		Dim imageAttributes As New Imaging.ImageAttributes()
 		imageAttributes.SetColorMatrix(colorMatrix, Imaging.ColorMatrixFlag.Default, Imaging.ColorAdjustType.Bitmap)
