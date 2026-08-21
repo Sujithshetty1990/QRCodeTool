@@ -79,6 +79,10 @@ Public Class MMQRCodeGenerator
 		SaveQRCodeImage(finalImage)
 		Return finalImage
 	End Function
+
+
+	Dim total As Integer = "100"
+	
 	Private Function GenerateQRCode_Latest(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
