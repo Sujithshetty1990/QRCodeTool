@@ -53,7 +53,7 @@ jobs:
             - Core/non-Core sync (per this repo's conventions in CLAUDE.md and
               .claude/knowledge/core-noncore-sync.md): any changes done must exist identically in both
               the Core and non-Core mirror. Flag as CRITICAL if one side has changes the other lacks.
-nt integrity: flag as CRITICAL any modification to an existing comment (regardless
+            - Comment integrity: flag as CRITICAL any modification to an existing comment (regardless
               of language - many are in Danish). New comments on new code are fine.
             - Encoding corruption: check changed files for the Unicode replacement character (U+FFFD)
               in string literals or comments - this has previously destroyed Icelandic letters in
