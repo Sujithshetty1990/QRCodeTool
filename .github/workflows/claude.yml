@@ -27,13 +27,15 @@ jobs:
           prompt: |
             /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment
 
+            This PR may have been reviewed by you on a previous commit. Do not skip or shorten this
+            review for being "already reviewed," "trivial," or "already commented on" — always perform
+            a full, fresh review of the complete current diff between the base branch and the latest
+            commit, and report every issue you find in that diff.
+
             After the review completes, also post one top-level PR comment (in addition to
             any inline findings) with a short 2-4 sentence plain-language summary of what
             this PR changes, based on the diff, followed by the review outcome (issues found
             or none).
-
-            If you find issues but are unable to post an inline comment for any reason, post a
-            top-level PR comment instead with the finding and the reason the inline comment failed.
             
           claude_args: |
             --max-turns 30
