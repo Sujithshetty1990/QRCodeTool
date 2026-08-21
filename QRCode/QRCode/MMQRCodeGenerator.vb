@@ -30,6 +30,20 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	Public Function FindDuplicateValues(items As List(Of Integer)) As List(Of Integer)
+    Dim duplicates As New List(Of Integer)
+
+    For i As Integer = 0 To items.Count - 1
+        For j As Integer = i + 1 To items.Count - 1
+            If items(i) = items(j) AndAlso Not duplicates.Contains(items(i)) Then
+                duplicates.Add(items(i))
+            End If
+        Next
+    Next
+
+    Return duplicates
+End Function
+
 	Public Sub WriteLog(message As String)
     Dim logFile As String = "C:\Temp\Application.log"
 
