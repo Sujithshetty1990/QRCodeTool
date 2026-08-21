@@ -23,13 +23,15 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           show_full_output: true
-          prompt: |
-            You are reviewing pull request #${{ github.event.pull_request.number }} in ${{ github.repository }}.
+          settings: |
+            {
+              "permissions": {
+                "allow": [
+                  "Bash(gh pr *)"
+                ]
+              }
+            }
 
-            This PR may have been reviewed by you on a previous commit. Do not skip or shorten this
-            review for being "already reviewed," "trivial," or "already commented on" — always perform
-            a full, fresh review of the complete current diff between the base branch and the latest
-            commit, and report every issue you find in that diff.
 
             Step 1 - Get the diff:
             Run exactly one Bash command: `gh pr diff ${{ github.event.pull_request.number }}`.
