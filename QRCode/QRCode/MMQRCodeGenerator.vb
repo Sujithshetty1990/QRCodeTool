@@ -30,6 +30,32 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	Public Function ExecuteWithRetry(action As Action) As Boolean
+    Dim maxRetries As Integer = 3
+
+    For i As Integer = 1 To maxRetries
+        Try
+            action.Invoke()
+            Return True
+        Catch ex As Exception
+            Threading.Thread.Sleep(1000)
+        End Try
+    Next
+
+    Return False
+	End Function
+
+    Imports System.Text.RegularExpressions
+
+	Public Function IsValidEmail(email As String) As Boolean
+    If String.IsNullOrWhiteSpace(email) Then
+        Return False
+    End If
+
+    Dim pattern As String = "^[^@\s]+@[^@\s]+\.[^@\s]+$"
+    Return Regex.IsMatch(email, pattern)
+	End Function
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
@@ -71,6 +97,20 @@ Public Class MMQRCodeGenerator
 		SaveQRCodeImage(finalImage)
 		Return finalImage
 	End Function
+
+    Public Sub WriteLog(message As String)
+    Dim logFile As String = "C:\Temp\Application.log"
+
+    Try
+        Using writer As New System.IO.StreamWriter(logFile, True)
+            writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}")
+        End Using
+    Catch ex As Exception
+        Console.WriteLine("Logging failed: " & ex.Message)
+    End Try
+	End Sub
+
+	
 	Private Function GenerateQRCode_Latest(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
@@ -135,6 +175,20 @@ Public Class MMQRCodeGenerator
 			' Handle the exception (e.g., log it)
 		End Try
 	End Sub
+
+    Public Function FindDuplicateValues(items As List(Of Integer)) As List(Of Integer)
+    Dim duplicates As New List(Of Integer)
+
+    For i As Integer = 0 To items.Count - 1
+        For j As Integer = i + 1 To items.Count - 1
+            If items(i) = items(j) AndAlso Not duplicates.Contains(items(i)) Then
+                duplicates.Add(items(i))
+            End If
+        Next
+    Next
+
+    Return duplicates
+	End Function
 
 	Private Sub btnUploadLogo_Click(sender As Object, e As EventArgs) Handles btnUploadLogo.Click
 		If OpenFileDialog1.ShowDialog = DialogResult.OK Then
