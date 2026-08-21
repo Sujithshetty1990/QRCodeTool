@@ -31,7 +31,13 @@ jobs:
                 ]
               }
             }
+          prompt: |
+            You are reviewing pull request #${{ github.event.pull_request.number }} in ${{ github.repository }}.
 
+            This PR may have been reviewed by you on a previous commit. Do not skip or shorten this
+            review for being "already reviewed," "trivial," or "already commented on" — always perform
+            a full, fresh review of the complete current diff between the base branch and the latest
+            commit, and report every issue you find in that diff.
 
             Step 1 - Get the diff:
             Run exactly one Bash command: `gh pr diff ${{ github.event.pull_request.number }}`.
@@ -47,7 +53,7 @@ jobs:
             - Core/non-Core sync (per this repo's conventions in CLAUDE.md and
               .claude/knowledge/core-noncore-sync.md): any changes done must exist identically in both
               the Core and non-Core mirror. Flag as CRITICAL if one side has changes the other lacks.
-            - Comment integrity: flag as CRITICAL any modification to an existing comment (regardless
+nt integrity: flag as CRITICAL any modification to an existing comment (regardless
               of language - many are in Danish). New comments on new code are fine.
             - Encoding corruption: check changed files for the Unicode replacement character (U+FFFD)
               in string literals or comments - this has previously destroyed Icelandic letters in
