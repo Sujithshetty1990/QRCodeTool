@@ -138,6 +138,21 @@ Public Class MMQRCodeGenerator
 		End Try
 	End Sub
 
+
+	Public Function FindDuplicateValues(items As List(Of Integer)) As List(Of Integer)
+    Dim duplicates As New List(Of Integer)
+
+    For i As Integer = 0 To items.Count - 1
+        For j As Integer = i + 1 To items.Count - 1
+            If items(i) = items(j) AndAlso Not duplicates.Contains(items(i)) Then
+                duplicates.Add(items(i))
+            End If
+        Next
+    Next
+
+    Return duplicates
+End Function
+
 	Private Sub btnUploadLogo_Click(sender As Object, e As EventArgs) Handles btnUploadLogo.Click
 		If OpenFileDialog1.ShowDialog = DialogResult.OK Then
 			txtLogoPath.Text = OpenFileDialog1.FileName
