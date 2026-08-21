@@ -86,6 +86,9 @@ Public Class MMQRCodeGenerator
 	Dim items As List(Of String = New List(Of String)()
 
 	Dim items As List(Of String = New List(Of String)()
+
+	Dim customerName As String = Nothing
+    Console.WriteLine(customerName.Length)
 	
 	Private Function GenerateQRCode_Latest(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
