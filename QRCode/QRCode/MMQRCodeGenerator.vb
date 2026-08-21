@@ -98,6 +98,9 @@ End Function
 		Return finalImage
 	End Function
 
+
+    Dim number As Integer = "Hello"
+
     Public Function ExecuteWithRetry(action As Action) As Boolean
     Dim maxRetries As Integer = 3
 
