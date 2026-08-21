@@ -33,6 +33,12 @@ jobs:
             a full, fresh review of the complete current diff between the base branch and the latest
             commit, and report every issue you find in that diff.
 
+            When gathering the diff or file contents, run one simple Bash command at a time — never
+            chain multiple operations together with ; or && or pipes, since compound commands cannot
+            be approved in this non-interactive environment. Never write files outside the checked-out
+            repository's working directory (e.g. never write to /tmp) — if you need to inspect output,
+            read it directly from the command result instead of redirecting it to a file.
+
             After the review completes, also post one top-level PR comment (in addition to
             any inline findings) with a short 2-4 sentence plain-language summary of what
             this PR changes, based on the diff, followed by the review outcome (issues found
