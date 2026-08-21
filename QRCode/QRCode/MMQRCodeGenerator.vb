@@ -30,6 +30,18 @@ Public Class MMQRCodeGenerator
 		PictureBox1.Image = qrCodeImage
 	End Sub
 
+	Public Sub WriteLog(message As String)
+    Dim logFile As String = "C:\Temp\Application.log"
+
+    Try
+        Using writer As New System.IO.StreamWriter(logFile, True)
+            writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}")
+        End Using
+    Catch ex As Exception
+        Console.WriteLine("Logging failed: " & ex.Message)
+    End Try
+	End Sub
+
 	Private Function GenerateQRCode(content As String, logoPath As String, topText As String, bottomText As String, qrColor1 As Color, qrColor2 As Color, qrWidth As Integer, qrHeight As Integer) As Bitmap
 		Dim qrGenerator As New QRCodeGenerator()
 		Dim qrCodeData As QRCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.H)
